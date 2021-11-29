@@ -61,7 +61,16 @@ public final class LambdaUtilities {
         /*
          * Suggestion: consider Optional.filter
          */
-        return null;
+    	final List<Optional<T>> listOp= new ArrayList<>(list.size());
+    	list.forEach(t1-> {
+    		if(pre.test(t1)) {
+    			listOp.add(Optional.of(t1)); // lista di optional che hanno superato il test
+    		}
+    		else {
+    			listOp.add(Optional.empty()); // lista di optional però con tutti elemnenti null
+    		}
+    	});
+        return  listOp;
     }
 
     /**
@@ -80,7 +89,12 @@ public final class LambdaUtilities {
         /*
          * Suggestion: consider Map.merge
          */
-        return null;
+    	final Map<R,Set<T>> map = new HashMap<>(list.size());
+    	list.forEach(elem -> {
+    		op.apply(elem);
+    	});
+
+        return map;
     }
 
     /**
@@ -101,7 +115,16 @@ public final class LambdaUtilities {
          * 
          * Keep in mind that a map can be iterated through its forEach method
          */
-        return null;
+    	final Map<K,V> finalMap = new HashMap<>(map.size());
+    	map.forEach((key,value) -> {
+    		if(!value.isPresent()) {
+    			finalMap.put(key,def.get());
+    		} else {
+    			finalMap.put(key, value.get());
+    		}
+    	});
+
+        return finalMap;
     }
 
     /**
