@@ -1,7 +1,9 @@
 package it.unibo.oop.lab.lambda.ex01;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,9 +63,9 @@ public final class LambdaUtilities {
         /*
          * Suggestion: consider Optional.filter
          */
-    	final List<Optional<T>> listOp= new ArrayList<>(list.size());
-    	list.forEach(t1-> {
-    		if(pre.test(t1)) {
+    	final List<Optional<T>> listOp = new ArrayList<>(list.size());
+    	list.forEach(t1 -> {
+    		if (pre.test(t1)) {
     			listOp.add(Optional.of(t1)); // lista di optional che hanno superato il test
     		}
     		else {
@@ -89,9 +91,12 @@ public final class LambdaUtilities {
         /*
          * Suggestion: consider Map.merge
          */
-    	final Map<R,Set<T>> map = new HashMap<>(list.size());
+    	final Map<R, Set<T>> map = new HashMap<>(list.size());
     	list.forEach(elem -> {
-    		op.apply(elem);
+    		map.merge(op.apply(elem), new HashSet<>(Arrays.asList(elem)), (t1, t2) -> {
+    			t1.addAll(t2);
+        		return t1;
+    		});
     	});
 
         return map;
@@ -115,10 +120,10 @@ public final class LambdaUtilities {
          * 
          * Keep in mind that a map can be iterated through its forEach method
          */
-    	final Map<K,V> finalMap = new HashMap<>(map.size());
-    	map.forEach((key,value) -> {
-    		if(!value.isPresent()) {
-    			finalMap.put(key,def.get());
+    	final Map<K, V> finalMap = new HashMap<>(map.size());
+    	map.forEach((key, value) -> {
+    		if (!value.isPresent()) {
+    			finalMap.put(key, def.get());
     		} else {
     			finalMap.put(key, value.get());
     		}
